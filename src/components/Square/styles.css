@@ -1,0 +1,11 @@
+.square {
+  background-color: rgb(104, 96, 221);
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.8;
+  transition: 0.2s
+}
+
+.square:hover {
+  opacity: 0.2;
+}

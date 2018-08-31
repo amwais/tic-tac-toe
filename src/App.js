@@ -12,7 +12,7 @@ class App extends Component {
 					<header className="App-header">
 						<h1 className="App-title">X / O</h1>
 					</header>
-					<Board />
+					<Board className="board" />
 				</div>
 			</Provider>
 		);

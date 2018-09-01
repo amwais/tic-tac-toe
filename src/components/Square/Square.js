@@ -13,6 +13,11 @@ export default class Square extends Component {
 			justifyContent: 'center'
 		};
 
+		const WinnerStyle = {
+			...style,
+			backgroundColor: 'green'
+		};
+
 		const symbolStyle = {
 			margin: '0px',
 			paddingBottom: '10px',
@@ -41,7 +46,11 @@ export default class Square extends Component {
 		);
 
 		return (
-			<div id={this.props.id} style={style} className="square-container">
+			<div
+				id={this.props.id}
+				style={this.props.winningSquares.includes(parseInt(this.props.id, 10)) ? WinnerStyle : style}
+				className="square-container"
+			>
 				{this.props.boardArr[this.props.id] > 0 ? symbolJsx : emptySquareJsx}
 			</div>
 		);

@@ -4,7 +4,8 @@ import { handleSetSquare } from './actions';
 
 const mapStateToProps = ({ board }) => ({
 	currentPlayer: board.currentPlayer,
-	boardArr: board.boardArr
+	boardArr: board.boardArr,
+	winningSquares: board.winningSquares
 });
 
 const mapDispatchToProps = (dispatch) => ({

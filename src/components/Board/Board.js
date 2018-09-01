@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import Square from '../Square';
 
 export default class Board extends Component {
-	render() {
-		// console.log(this.props);
+	componentDidUpdate() {
+		this.props.checkIfHasWinner(this.props.boardArr);
+	}
 
+	render() {
 		const style = {
 			display: 'flex',
 			flexWrap: 'wrap',
@@ -13,17 +15,13 @@ export default class Board extends Component {
 			marginBottom: '100px'
 		};
 
-		const pStyle = {
-			position: 'center'
-		};
-
 		const lineBreak = {
 			width: '100%'
 		};
 		return (
 			<div>
 				<div style={style}>
-					<p>Current Player: {this.props.currentPlayer < 2 ? 'X' : 'Y'}</p>
+					<p>Current Player: {this.props.currentPlayer < 2 ? 'X' : 'O'}</p>
 					<div style={lineBreak} />
 					<Square id="0" />
 					<Square id="1" />

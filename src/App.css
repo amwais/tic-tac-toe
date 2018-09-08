@@ -2,6 +2,17 @@
   background-color: rgb(78, 64, 128);
   text-align: center;
   height: 100px;
-  padding: 5px;
+  padding: 25px;
   color: white;
+}
+
+.start-btn {
+  width: 40%;
+  position: relative
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

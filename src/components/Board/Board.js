@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import Square from '../Square';
+import Confetti from 'react-confetti';
+import SelectionModal from '../SelectionModal';
+import 'semantic-ui-css/semantic.min.css';
 
 export default class Board extends Component {
 	componentDidUpdate() {
-		this.props.checkIfHasWinner(this.props.boardArr);
+		if (!this.props.checkIfHasWinner(this.props.boardArr) && this.props.currentPlayer === this.props.opponent) {
+			setTimeout(() => {
+				this.props.playTurn(this.props.boardArr);
+			}, 2000);
+		}
 	}
 
 	render() {
@@ -20,6 +27,13 @@ export default class Board extends Component {
 		};
 		return (
 			<div>
+				<SelectionModal />
+				<div
+					hidden={this.props.gameOver ? false : true}
+					style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+				>
+					<Confetti width={window.innerWidth} height={window.innerHeight} />
+				</div>
 				<div style={style}>
 					<p>Current Player: {this.props.currentPlayer < 2 ? 'X' : 'O'}</p>
 					<div style={lineBreak} />

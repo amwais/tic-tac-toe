@@ -5,7 +5,9 @@ const initialState = {
 	boardArr: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
 	winningSquares: [],
 	winner: 0,
-	gameOver: false
+	gameOver: false,
+	// user - 1, pc - 2
+	opponent: 2
 };
 
 export default (state = initialState, action) => {
@@ -23,9 +25,11 @@ export default (state = initialState, action) => {
 				winningSquares: action.payload.markedIds,
 				gameOver: true
 			};
-		case 'RESTART_GAME':
+		case 'START_GAME':
 			return {
-				initialState
+				...initialState,
+				currentPlayer: action.payload.currentPlayer,
+				opponent: action.payload.opponent
 			};
 		default:
 			return { ...state };

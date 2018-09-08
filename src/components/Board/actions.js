@@ -1,27 +1,87 @@
+export const playTurn = (boardArr) => (dispatch) => {
+	const almostWinningSequences = getAlmostWinningSequences(getSequences(boardArr));
+	let selectedSquare = Math.floor(Math.random() * boardArr.length);
+	let idxOfselectedSquare;
+
+	if (Object.keys(almostWinningSequences).length > 0) {
+		if (Object.keys(almostWinningSequences).length > 1) {
+			const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
+			let almostWinningSeq = almostWinningSequences[Object.keys(almostWinningSequences)[randSeqToBlock]];
+			idxOfselectedSquare = almostWinningSeq.seq.indexOf(0);
+			selectedSquare = almostWinningSeq.ids[idxOfselectedSquare];
+		} else {
+			const shouldBlock = Math.floor(Math.random() * 2) === 1;
+			if (shouldBlock) {
+				const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
+				let almostWinningSeq = Object.keys(almostWinningSequences)[randSeqToBlock];
+
+				idxOfselectedSquare = almostWinningSequences[almostWinningSeq].seq.indexOf(0);
+
+				selectedSquare = almostWinningSequences[almostWinningSeq].ids[idxOfselectedSquare];
+			} else {
+				while (boardArr[selectedSquare] > 0) {
+					selectedSquare = Math.floor(Math.random() * boardArr.length);
+				}
+			}
+		}
+	} else {
+		while (boardArr[selectedSquare] > 0) {
+			selectedSquare = Math.floor(Math.random() * boardArr.length);
+		}
+	}
+
+	dispatch({
+		type: 'SET_SQUARE',
+		payload: selectedSquare
+	});
+};
+
 export const handleArrayChange = (boardArr, id, currentPlayer) => {
 	boardArr.splice(id, 1, currentPlayer);
 	return boardArr;
 };
 
-const test = (sequence, markedIds, dispatch) => {
-	// console.log(markedIds);
+export const handleStartGame = (opponent, symbol) => (dispatch) => {
+	dispatch({
+		type: 'START_GAME',
+		payload: {
+			currentPlayer: symbol === 'x' ? 1 : 2,
+			opponent
+		}
+	});
+};
 
-	// console.log(sequence);
+const getAlmostWinningSequences = (sequences) => {
+	let almostWinningSequences = {};
 
-	if (sequence[0] > 0 && sequence.every((val, i, arr) => val === arr[0])) {
-		dispatch({
-			type: 'SET_WINNER',
-			payload: {
-				winner: sequence[0],
-				markedIds
+	for (let sequence in sequences) {
+		let count = 0;
+		const { ids, seq } = sequences[sequence];
+
+		for (let i = 0; i < seq.length; i++) {
+			if (seq[i] === 1) {
+				// Check no 2 in seq
+				count++;
 			}
-		});
+		}
+		if (count > 1 && seq.indexOf(2) === -1) {
+			almostWinningSequences[sequence] = {
+				ids,
+				seq
+			};
+		}
+	}
+	return almostWinningSequences;
+};
+
+const testWinningSequence = (sequence) => {
+	if (sequence[0] > 0 && sequence.every((val, i, arr) => val === arr[0])) {
 		return true;
 	}
 	return false;
 };
 
-export const checkIfHasWinner = (boardArr) => (dispatch) => {
+const getSequences = (boardArr) => {
 	const row1 = boardArr.slice(0, 3);
 	const row2 = boardArr.slice(3, 6);
 	const row3 = boardArr.slice(6);
@@ -67,12 +127,23 @@ export const checkIfHasWinner = (boardArr) => (dispatch) => {
 			seq: diagonalRightToLeft
 		}
 	};
-	// console.log(sequences);
+	return sequences;
+};
+
+export const checkIfHasWinner = (boardArr) => (dispatch) => {
+	const sequences = getSequences(boardArr);
 	for (let sequence in sequences) {
 		sequence = sequences[sequence];
 
-		if (test(sequence.seq, sequence.ids, dispatch)) {
-			return;
+		if (testWinningSequence(sequence.seq, sequence.ids)) {
+			dispatch({
+				type: 'SET_WINNER',
+				payload: {
+					winner: sequence.seq,
+					markedIds: sequence.ids
+				}
+			});
+			return true;
 		}
 	}
 };

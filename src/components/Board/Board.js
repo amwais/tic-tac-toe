@@ -6,10 +6,14 @@ import 'semantic-ui-css/semantic.min.css';
 
 export default class Board extends Component {
 	componentDidUpdate() {
-		if (!this.props.checkIfHasWinner(this.props.boardArr) && this.props.currentPlayer === this.props.opponent) {
+		if (
+			!this.props.checkIfHasWinner(this.props.boardArr) &&
+			!this.props.checkIfDraw(this.props.boardArr) &&
+			this.props.currentPlayer === this.props.opponent
+		) {
 			setTimeout(() => {
 				this.props.playTurn(this.props.boardArr);
-			}, 2000);
+			}, 1500);
 		}
 	}
 
@@ -35,7 +39,6 @@ export default class Board extends Component {
 					<Confetti width={window.innerWidth} height={window.innerHeight} />
 				</div>
 				<div style={style}>
-					<p>Current Player: {this.props.currentPlayer < 2 ? 'X' : 'O'}</p>
 					<div style={lineBreak} />
 					<Square id="0" />
 					<Square id="1" />

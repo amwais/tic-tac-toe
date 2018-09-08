@@ -23,7 +23,15 @@ export default (state = initialState, action) => {
 				...state,
 				currentPlayer: 0,
 				winningSquares: action.payload.markedIds,
-				gameOver: true
+				gameOver: true,
+				winner: action.payload.winner
+			};
+		case 'SET_DRAW':
+			return {
+				...state,
+				currentPlayer: 0,
+				gameOver: true,
+				winner: 0
 			};
 		case 'START_GAME':
 			return {

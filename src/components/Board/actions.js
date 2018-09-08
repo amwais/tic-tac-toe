@@ -4,26 +4,10 @@ export const playTurn = (boardArr) => (dispatch) => {
 	let idxOfselectedSquare;
 
 	if (Object.keys(almostWinningSequences).length > 0) {
-		if (Object.keys(almostWinningSequences).length > 1) {
-			const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
-			let almostWinningSeq = almostWinningSequences[Object.keys(almostWinningSequences)[randSeqToBlock]];
-			idxOfselectedSquare = almostWinningSeq.seq.indexOf(0);
-			selectedSquare = almostWinningSeq.ids[idxOfselectedSquare];
-		} else {
-			const shouldBlock = Math.floor(Math.random() * 2) === 1;
-			if (shouldBlock) {
-				const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
-				let almostWinningSeq = Object.keys(almostWinningSequences)[randSeqToBlock];
-
-				idxOfselectedSquare = almostWinningSequences[almostWinningSeq].seq.indexOf(0);
-
-				selectedSquare = almostWinningSequences[almostWinningSeq].ids[idxOfselectedSquare];
-			} else {
-				while (boardArr[selectedSquare] > 0) {
-					selectedSquare = Math.floor(Math.random() * boardArr.length);
-				}
-			}
-		}
+		const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
+		let almostWinningSeq = almostWinningSequences[Object.keys(almostWinningSequences)[randSeqToBlock]];
+		idxOfselectedSquare = almostWinningSeq.seq.indexOf(0);
+		selectedSquare = almostWinningSeq.ids[idxOfselectedSquare];
 	} else {
 		while (boardArr[selectedSquare] > 0) {
 			selectedSquare = Math.floor(Math.random() * boardArr.length);
@@ -130,6 +114,16 @@ const getSequences = (boardArr) => {
 	return sequences;
 };
 
+export const checkIfDraw = (boardArr) => (dispatch) => {
+	if (boardArr.indexOf(0) === -1) {
+		dispatch({
+			type: 'SET_DRAW'
+		});
+		return true;
+	}
+	return false;
+};
+
 export const checkIfHasWinner = (boardArr) => (dispatch) => {
 	const sequences = getSequences(boardArr);
 	for (let sequence in sequences) {
@@ -139,11 +133,12 @@ export const checkIfHasWinner = (boardArr) => (dispatch) => {
 			dispatch({
 				type: 'SET_WINNER',
 				payload: {
-					winner: sequence.seq,
+					winner: sequence.seq[0],
 					markedIds: sequence.ids
 				}
 			});
 			return true;
 		}
 	}
+	return false;
 };

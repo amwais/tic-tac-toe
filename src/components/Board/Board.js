@@ -3,6 +3,7 @@ import Square from '../Square';
 import Confetti from 'react-confetti';
 import SelectionModal from '../SelectionModal';
 import 'semantic-ui-css/semantic.min.css';
+import { Button } from 'semantic-ui-react';
 
 export default class Board extends Component {
 	componentDidUpdate() {
@@ -38,6 +39,20 @@ export default class Board extends Component {
 				>
 					<Confetti width={window.innerWidth} height={window.innerHeight} />
 				</div>
+				<Button
+					icon="refresh"
+					color="green"
+					size="mini"
+					className="start-btn"
+					onClick={() => window.location.reload()}
+					style={{
+						width: '10%',
+						display: 'block',
+						verticalAlign: 'middle',
+						margin: 'auto',
+						marginTop: '20px'
+					}}
+				/>
 				<div style={style}>
 					<div style={lineBreak} />
 					<Square id="0" />

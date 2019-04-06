@@ -33,6 +33,17 @@ export default (state = initialState, action) => {
 				gameOver: true,
 				winner: 0
 			};
+		case 'RESTART_GAME':
+			return {
+				currentPlayer: 1,
+				boardArr: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+				winningSquares: [],
+				winner: 0,
+				gameOver: false,
+				// user - 1, pc - 2
+				opponent: 2
+			};
+
 		case 'START_GAME':
 			return {
 				...initialState,

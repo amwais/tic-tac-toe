@@ -1,22 +1,37 @@
 export const playTurn = (boardArr) => (dispatch) => {
 	const almostWinningSequences = getAlmostWinningSequences(getSequences(boardArr));
+	const opponentAlmostWinningSequences = getOpponentAlmostWinningSequences(getSequences(boardArr));
 	let selectedSquare = Math.floor(Math.random() * boardArr.length);
 	let idxOfselectedSquare;
 
-	if (Object.keys(almostWinningSequences).length > 0) {
-		const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
-		let almostWinningSeq = almostWinningSequences[Object.keys(almostWinningSequences)[randSeqToBlock]];
+	if (!Object.keys(opponentAlmostWinningSequences).length > 0) {
+		if (Object.keys(almostWinningSequences).length > 0) {
+			const randSeqToBlock = Math.floor(Math.random() * Object.keys(almostWinningSequences).length);
+			let almostWinningSeq = almostWinningSequences[Object.keys(almostWinningSequences)[randSeqToBlock]];
+			idxOfselectedSquare = almostWinningSeq.seq.indexOf(0);
+			selectedSquare = almostWinningSeq.ids[idxOfselectedSquare];
+		} else {
+			while (boardArr[selectedSquare] > 0) {
+				selectedSquare = Math.floor(Math.random() * boardArr.length);
+			}
+		}
+	} else {
+		const randSeqToWin = Math.floor(Math.random() * Object.keys(opponentAlmostWinningSequences).length);
+		let almostWinningSeq =
+			opponentAlmostWinningSequences[Object.keys(opponentAlmostWinningSequences)[randSeqToWin]];
 		idxOfselectedSquare = almostWinningSeq.seq.indexOf(0);
 		selectedSquare = almostWinningSeq.ids[idxOfselectedSquare];
-	} else {
-		while (boardArr[selectedSquare] > 0) {
-			selectedSquare = Math.floor(Math.random() * boardArr.length);
-		}
 	}
 
 	dispatch({
 		type: 'SET_SQUARE',
 		payload: selectedSquare
+	});
+};
+
+export const restartGame = () => (dispatch) => {
+	dispatch({
+		type: 'RESTART_GAME'
 	});
 };
 
@@ -33,6 +48,28 @@ export const handleStartGame = (opponent, symbol) => (dispatch) => {
 			opponent
 		}
 	});
+};
+
+const getOpponentAlmostWinningSequences = (sequences) => {
+	let almostWinningSequences = {};
+
+	for (let sequence in sequences) {
+		let count = 0;
+		const { ids, seq } = sequences[sequence];
+
+		for (let i = 0; i < seq.length; i++) {
+			if (seq[i] === 2) {
+				count++;
+			}
+		}
+		if (count > 1 && seq.indexOf(1) === -1) {
+			almostWinningSequences[sequence] = {
+				ids,
+				seq
+			};
+		}
+	}
+	return almostWinningSequences;
 };
 
 const getAlmostWinningSequences = (sequences) => {

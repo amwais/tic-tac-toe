@@ -19,21 +19,29 @@ export default class Square extends Component {
 		};
 
 		const symbolStyle = {
-			margin: '0px',
-			paddingBottom: '10px',
-			fontSize: '10em'
+			// margin: '0px',
+			// paddingBottom: '10px',
+			fontSize: '10rem'
 		};
 
 		const symbolJsx = (
-			<h1 style={symbolStyle}>
-				{this.props.boardArr[this.props.id] > 0 ? this.props.boardArr[this.props.id] === 1 ? (
-					'X'
-				) : (
-					'O'
-				) : (
-					undefined
-				)}
-			</h1>
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center'
+				}}
+			>
+				<h1 style={symbolStyle}>
+					{this.props.boardArr[this.props.id] > 0 ? this.props.boardArr[this.props.id] === 1 ? (
+						'X'
+					) : (
+						'O'
+					) : (
+						undefined
+					)}
+				</h1>
+			</div>
 		);
 
 		const emptySquareJsx = (
